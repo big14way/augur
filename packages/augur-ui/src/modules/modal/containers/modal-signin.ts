@@ -16,6 +16,7 @@ import {
   SIGNIN_LOADING_TEXT_PORTIS,
   SIGNIN_LOADING_TEXT_TORUS,
   SIGNIN_LOADING_TEXT_FORTMATIC,
+  SIGNIN_LOADING_TEXT_WALLETCONNECT,
   SIGNIN_SIGN_WALLET,
   MODAL_TEST_BET,
   MODAL_ERROR,
@@ -28,11 +29,13 @@ import { loginWithInjectedWeb3 } from 'modules/auth/actions/login-with-injected-
 import { loginWithFortmatic } from 'modules/auth/actions/login-with-fortmatic';
 import { loginWithPortis } from 'modules/auth/actions/login-with-portis';
 import { loginWithTorus } from 'modules/auth/actions/login-with-torus';
+import { loginWithWalletConnect } from 'modules/auth/actions/login-with-walletconnect';
 import {
   EmailLogin,
   GoogleLogin,
   PhoneLogin,
   MetaMaskLogin,
+  WalletConnectLogin,
 } from 'modules/common/icons';
 import { windowRef } from 'utils/window-ref';
 import { isSafari } from 'utils/is-safari';
@@ -65,6 +68,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<void, any, Action>) => ({
     dispatch(loginWithTorus()),
   connectFortmatic: (withEmail) =>
     dispatch(loginWithFortmatic(withEmail)),
+  connectWalletConnect: () => dispatch(loginWithWalletConnect()),
   errorModal: (error, title = null, link = null, linkLabel = null) => dispatch(
     updateModal({
       type: MODAL_ERROR,
@@ -178,6 +182,27 @@ const mergeProps = (sP: any, dP: any, oP: any) => {
           await dP.connectTorus();
         } catch (error) {
           onError(error, ACCOUNT_TYPES.TORUS);
+        }
+      },
+    },
+    {
+      type: ACCOUNT_TYPES.WALLETCONNECT,
+      icon: WalletConnectLogin,
+      text: `${LOGIN_OR_SIGNUP} with ${ACCOUNT_TYPES.WALLETCONNECT}`,
+      subText: 'Mobile Wallets via QR Code',
+      hidden: false,
+      primary: false,
+      action: async () => {
+        dP.loadingModal(SIGNIN_LOADING_TEXT_WALLETCONNECT, () => login());
+        try {
+          await dP.connectWalletConnect();
+        } catch (error) {
+          const isWalletConnectCancelError = error?.message?.indexOf('User closed modal') !== -1 || error?.message?.indexOf('Connection request reset') !== -1;
+          if (isWalletConnectCancelError) {
+            dP.closeModal();
+            return;
+          }
+          onError(error, ACCOUNT_TYPES.WALLETCONNECT);
         }
       },
     },

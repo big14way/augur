@@ -172,6 +172,7 @@ export const ACCOUNT_TYPES = {
   METAMASK: 'MetaMask',
   TREZOR: 'Trezor',
   WEB3WALLET: 'MetaMask / Web3', // Mobile Wallets + Extensions (MetaMask, Dapper, Trust, Coinbase)
+  WALLETCONNECT: 'WalletConnect',
   UNLOCKED_ETHEREUM_NODE: 'unlockedEthereumNode',
 };
 
@@ -187,6 +188,8 @@ export const SIGNIN_LOADING_TEXT_FORTMATIC =
   'Connecting to our partners at Fortmatic to log you in to your secure account.';
 export const SIGNIN_LOADING_TEXT_TORUS =
   'Connecting to our partners at Torus to log you in to your secure account.';
+export const SIGNIN_LOADING_TEXT_WALLETCONNECT =
+  'Scan the QR code with your mobile wallet to connect.';
 export const SIGNIN_SIGN_WALLET =
   'Your wallet will ask you to digitally sign in to link it with Augur';
 
